@@ -8,7 +8,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=255, unique=True, verbose_name="URL слаг")
 
     class Meta:
-        db_table = 'Категории'
+
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
         ordering = ['name']
@@ -38,7 +38,7 @@ class Products(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'Продукты'
+
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
         ordering = ['name']
@@ -77,7 +77,7 @@ class Basket(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'Продукты'
+
         verbose_name = "Корзина"
         verbose_name_plural = "Корзины"
 
@@ -99,7 +99,7 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_name = "Отзывы"
+
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
 
