@@ -26,3 +26,6 @@ api_urls = [
 ]
 
 urlpatterns += api_urls
+
+admin.site.site_header = "Панель администрирования"
+admin.site.index_title = "Панель администратора интернет магазина"
