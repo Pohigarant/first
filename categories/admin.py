@@ -10,16 +10,19 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ['name', 'created_at']
     list_editable = ['is_active','price','product_info']
     list_per_page = 20
-    #list_filter = ['price', 'quantity', 'is_active', 'created_at', "category_id"]
-    #search_fields = ['name', 'slug', 'article']
+    list_filter = ['price', 'quantity', 'is_active', 'created_at', "category_id"]
+    search_fields = ['name', 'slug', 'article']
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id','name','slug']
+    prepopulated_fields = {'slug':('name',)}
     ordering = ['name']
     list_editable = ['name']
     list_per_page = 20
+    search_fields = ['name']
+    list_filter = ['name']
 
 @admin.register(Buyer)
 class BuyerAdmin(admin.ModelAdmin):
@@ -27,18 +30,23 @@ class BuyerAdmin(admin.ModelAdmin):
     ordering = ['name','registration_date']
     list_editable = ['name','surname','email','city','phone','birth_date']
     list_per_page = 20
+    search_fields = ['name','surname','email','phone']
+    list_filter = ['name','surname','email','city','phone','birth_date','registration_date']
 
 
 @admin.register(Basket)
 class BasketAdmin(admin.ModelAdmin):
-    list_display = ['id','quantity','created_at']
+    list_display = ['id','quantity','created_at','user']
     ordering = ['quantity']
     list_editable = ['quantity']
     list_per_page = 20
+    list_filter = ['quantity']
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['id','rating','text','created_at']
+    list_display = ['rating','text','created_at','product__name','user__name']
     ordering = ['rating']
-    list_editable = ['rating']
+
     list_per_page = 20
+    search_fields = ['rating']
+    list_filter = ['rating']

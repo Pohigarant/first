@@ -22,7 +22,7 @@ urlpatterns = [
 ]
 
 api_urls = [
-    path('api/cats/', include('categories.urls')),
+    path('api/', include('categories.urls')),
 ]
 
 urlpatterns += api_urls
