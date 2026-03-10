@@ -1,9 +1,8 @@
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
-from django.template.loader import render_to_string
-from django.views import View
+from django.http import JsonResponse
 
-from categories.models import Category
+from django.views.generic import ListView, DetailView, CreateView
+import json
+from .models import Category
 
 
 def hello_view(request):
@@ -15,16 +14,50 @@ def hello_view(request):
     )
 
 
-def category(request):
-    cats = Category.objects.all()
-    return render(request, 'categories/category.html', {'cats': cats})
+class CategoryView(ListView):
+    model = Category
+
+    def get(self,request,*args,**kwargs):
+        queryset = self.get_queryset()
+        data = list(queryset.values())
+
+        return JsonResponse(data,safe=False)
 
 
-def about(request):
-    return render(request, 'categories/about.html',status=200)
+class CategoryDetailView(DetailView):
+    model = Category
+
+    def get(self,request,*args,**kwargs):
+        cat = self.get_object()
+        data = {'id':cat.id,'name':cat.name, 'slug':cat.slug}
+        return JsonResponse(data,safe=False)
+
+class CategoryCreateView(CreateView):
+    model = Category
+
+    fields = ['name','slug']
 
 
-def category_view(request, cat_id):
-    return HttpResponse(f'GET разрешён категория = {cat_id}')
+    def post(self, request, *args, **kwargs):
+        # 1. Парсим JSON
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Неверный JSON'}, status=400)
 
+        # 2. Создаём форму с данными
+        form = self.get_form_class()(data)
 
+        # 3. Валидируем и сохраняем
+        if form.is_valid():
+            new_obj = form.save()
+            # Формируем ответ с данными созданного объекта
+            response_data = {
+                'id': new_obj.id,
+                'name': new_obj.name,
+                'slug': new_obj.slug,
+            }
+            return JsonResponse(response_data, status=201)  # 201 Created
+        else:
+            # Возвращаем ошибки валидации
+            return JsonResponse(form.errors, status=400)

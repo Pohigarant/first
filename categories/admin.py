@@ -1,4 +1,6 @@
 from django.contrib import admin
+from slugify import slugify
+
 from .models import Product, Category, Buyer, Review, Basket
 
 
@@ -8,6 +10,7 @@ class ProductAdmin(admin.ModelAdmin):
                     'created_at', 'updated_at', "category"]
     list_display_links = ['id', 'name']
     ordering = ['name', 'created_at']
+    prepopulated_fields = {'slug': (slugify('name'),)}
     list_editable = ['is_active','price','product_info']
     list_per_page = 20
     list_filter = ['price', 'quantity', 'is_active', 'created_at', "category_id"]
@@ -17,7 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id','name','slug']
-    prepopulated_fields = {'slug':('name',)}
+    prepopulated_fields = {'slug': (slugify('name'),)}
     ordering = ['name']
     list_editable = ['name']
     list_per_page = 20
