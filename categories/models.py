@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.text import slugify
+from slugify import slugify
 from django.urls import reverse
 
 
@@ -16,12 +16,14 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
 
-
-
+    def save(self, *args, **kwargs):
+        # Если slug не передан (пустая строка) — генерируем из name
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL,
@@ -43,6 +45,16 @@ class Product(models.Model):
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
         ordering = ['name']
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old = Product.objects.get(pk=self.pk)
+            if old.name != self.name:
+                self.slug = slugify(self.name)
+        else:
+            if not self.slug:
+                self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'slug': self.slug})
