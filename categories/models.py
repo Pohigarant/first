@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from slugify import slugify
 from django.urls import reverse
@@ -24,6 +24,7 @@ class Category(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL,
@@ -60,18 +61,13 @@ class Product(models.Model):
         return reverse('product_detail', kwargs={'slug': self.slug})
 
 
-class Buyer(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Имя")
-    surname = models.CharField(max_length=255, verbose_name="Фамилия")
+class Buyer(AbstractUser):
     city = models.CharField(max_length=100, blank=True, verbose_name="Город")
     birth_date = models.DateField(null=True, blank=True, verbose_name="Дата рождения")
     email = models.EmailField(max_length=255, unique=True, verbose_name="Электронная почта")
-    phone = models.CharField(max_length=30, unique=True, verbose_name="Номер мобильного телефона")
-    registration_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата регистрации")
+    phone = models.CharField(max_length=30, blank=True, verbose_name="Номер мобильного телефона")
 
-    class Meta:
-        verbose_name = "Покупатель"
-        verbose_name_plural = "Покупатели"
+
 
 
 class Basket(models.Model):
@@ -96,6 +92,7 @@ class Review(models.Model):
     )
     user = models.ForeignKey(
         Buyer,
+
         on_delete=models.CASCADE,
         verbose_name="Покупатель"
     )

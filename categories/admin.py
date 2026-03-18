@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from slugify import slugify
 
 from .models import Product, Category, Buyer, Review, Basket
@@ -28,13 +29,15 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = ['name']
 
 @admin.register(Buyer)
-class BuyerAdmin(admin.ModelAdmin):
-    list_display = ['id','name','surname','email','city','phone','birth_date','registration_date']
-    ordering = ['name','registration_date']
-    list_editable = ['name','surname','email','city','phone','birth_date']
-    list_per_page = 20
-    search_fields = ['name','surname','email','phone']
-    list_filter = ['name','surname','email','city','phone','birth_date','registration_date']
+class BuyerAdmin(UserAdmin):
+    list_display = ('username', 'email', 'phone','city', 'is_staff', 'birth_date')
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('phone','birth_date')}),
+    )
+    # Добавляем наши поля в форму создания нового пользователя
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {'fields': ('phone', 'birth_date')}),
+    )
 
 
 @admin.register(Basket)
@@ -47,7 +50,7 @@ class BasketAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['rating','text','created_at','product__name','user__name']
+    list_display = ['rating','text','created_at','product__name','user__email']
     ordering = ['rating']
 
     list_per_page = 20
