@@ -14,13 +14,17 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ["id", "name", "price", "quantity", "category"]
-        read_only_fields = ["id", "created_at", "updated_at",""]
+        read_only_fields = ["id", "created_at", "updated_at"]
 
 class BuyerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Buyer
         fields = ["id", "first_name", "last_name", "email", "birth_date","email","phone","date_joined"]
         read_only_fields = ["id","date_joined"]
+        extra_kwargs = {
+            "password": {
+                "write_only": True, }
+        }
 
 
 class BasketSerializer(serializers.ModelSerializer):
