@@ -33,6 +33,7 @@ class Product(models.Model):
                                  null=True, blank=True)
 
     name = models.CharField(max_length=255, verbose_name="Имя")
+    model = models.CharField(max_length=255, verbose_name="Модель", blank=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True, verbose_name="URL слаг")
     article = models.CharField(max_length=50, verbose_name="Артикул", blank=True)
     product_info = models.TextField(blank=True)
