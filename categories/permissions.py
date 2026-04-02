@@ -13,14 +13,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user == request.user
 
 
-class IsBasketOwner(permissions.BasePermission):
-    message = 'Вы не можеете смотреть данный обьект'
-    def has_object_permission(self, request, view, obj):
-        return obj.user == request.user
-
 
 class IsOwnerOrAdmin(permissions.BasePermission):
     message = "Вы не можете редактировать данный профиль"
 
     def has_object_permission(self, request, view, obj):
-        return obj == request.user or request.user.is_staff
+        return obj.user == request.user or request.user.is_staff

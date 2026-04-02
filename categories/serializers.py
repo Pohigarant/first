@@ -13,7 +13,7 @@ class ProductSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(slug_field='name', read_only=True)
     class Meta:
         model = Product
-        fields = ["id", "name", "price", "quantity", "category"]
+        fields = ["id", "name","model", "price", "quantity", "category"]
         read_only_fields = ["id", "created_at", "updated_at"]
 
 class BuyerSerializer(serializers.ModelSerializer):

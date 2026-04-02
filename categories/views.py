@@ -51,7 +51,7 @@ class BuyerViewSet(viewsets.ModelViewSet):
 class BasketViewSet(viewsets.ModelViewSet):
     queryset = Buyer.objects.all()
     serializer_class = BuyerSerializer
-    permission_classes = [IsBasketOwner]
+    permission_classes = [IsOwnerOrAdmin]
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
