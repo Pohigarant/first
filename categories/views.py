@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from .permissions import IsOwnerOrReadOnly, IsBasketOwner, IsOwnerOrAdmin
+from .permissions import IsOwnerOrReadOnly,  IsOwnerOrAdmin
 from .serializers import CategorySerializer, ProductSerializer, BuyerSerializer, ReviewSerializer
 
 
