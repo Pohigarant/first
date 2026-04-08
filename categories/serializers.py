@@ -44,3 +44,26 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ["id", "user", "rating", "product", "created_at"]
         read_only_fields = ["id", "created_at"]
 
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True,required=True)
+    password2 = serializers.CharField(write_only=True,required=True)
+    class Meta:
+        model = Buyer
+        fields = ["username", "password","email", "password2"]
+
+    def validate(self, data):
+        if not (data.get("username") or data.get("email")):
+            raise serializers.ValidationError("Нужно указать username or email")
+
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({"password":"Пароли не совпадают"})
+        return data
+
+    def create(self, validated_data):
+        validated_data.pop('password2')
+        if not validated_data.get('username'):
+            validated_data['username'] = validated_data['email']
+
+        buyer = Buyer.objects.create(**validated_data)
+        return buyer
